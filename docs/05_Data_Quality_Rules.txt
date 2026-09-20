@@ -1,0 +1,167 @@
+# Data Quality & Validation Rules
+
+## 1. Purpose
+
+The validation layer is responsible for identifying records that do not satisfy the structural, business, or referential requirements of the source data.
+
+Invalid records must be explicitly identified and routed to the rejection process rather than silently removed.
+
+---
+
+# 2. Validation Categories
+
+The validation framework contains four primary categories:
+
+1. Completeness
+2. Validity
+3. Uniqueness
+4. Referential Integrity
+
+---
+
+# 3. Customer Validation Rules
+
+| Rule ID | Column | Rule | Severity | Action |
+|---|---|---|---|---|
+| CUST-DQ-001 | customer_id | Must not be NULL | Critical | Reject |
+| CUST-DQ-002 | customer_id | Must be unique | Critical | Reject |
+| CUST-DQ-003 | customer_name | Must not be NULL | High | Reject |
+| CUST-DQ-004 | customer_email | Must not be NULL | High | Reject |
+| CUST-DQ-005 | customer_email | Must follow valid email format | Medium | Reject |
+| CUST-DQ-006 | country | Must belong to supported country list | High | Reject |
+| CUST-DQ-007 | registration_date | Must be a valid date | High | Reject |
+| CUST-DQ-008 | customer_status | Must belong to supported status list | High | Reject |
+
+### Supported Customer Statuses
+
+- ACTIVE
+- INACTIVE
+- SUSPENDED
+
+---
+
+# 4. Merchant Validation Rules
+
+| Rule ID | Column | Rule | Severity | Action |
+|---|---|---|---|---|
+| MER-DQ-001 | merchant_id | Must not be NULL | Critical | Reject |
+| MER-DQ-002 | merchant_id | Must be unique | Critical | Reject |
+| MER-DQ-003 | merchant_name | Must not be NULL | High | Reject |
+| MER-DQ-004 | merchant_category | Must not be NULL | High | Reject |
+| MER-DQ-005 | merchant_category | Must belong to supported category list | High | Reject |
+| MER-DQ-006 | country | Must belong to supported country list | High | Reject |
+| MER-DQ-007 | onboarding_date | Must be a valid date | High | Reject |
+| MER-DQ-008 | merchant_status | Must belong to supported status list | High | Reject |
+
+---
+
+# 4. Transaction Validation Rules
+
+| Rule ID | Column | Rule | Severity | Action |
+|---|---|---|---|---|
+| TXN-DQ-001 | transaction_id | Must not be NULL | Critical | Reject |
+| TXN-DQ-002 | transaction_id | Must be unique | Critical | Reject |
+| TXN-DQ-003 | customer_id | Must not be NULL | Critical | Reject |
+| TXN-DQ-004 | merchant_id | Must not be NULL | Critical | Reject |
+| TXN-DQ-005 | transaction_timestamp | Must be a valid timestamp | High | Reject |
+| TXN-DQ-006 | amount | Must be greater than zero | Critical | Reject |
+| TXN-DQ-007 | currency | Must belong to supported currency list | High | Reject |
+| TXN-DQ-008 | payment_method | Must belong to supported payment methods | High | Reject |
+| TXN-DQ-009 | transaction_status | Must belong to supported statuses | High | Reject |
+| TXN-DQ-010 | country | Must belong to supported country list | High | Reject |
+| TXN-DQ-011 | gateway | Must belong to supported gateway list | High | Reject |
+| TXN-DQ-012 | response_code | Must be a valid response code | High | Reject |
+| TXN-DQ-013 | device_type | Must belong to supported device types | Medium | Reject |
+| TXN-DQ-014 | customer_id | Must exist in customer source | Critical | Reject |
+| TXN-DQ-015 | merchant_id | Must exist in merchant source | Critical | Reject |
+
+---
+
+# 4. Supported Transaction Values
+
+## Currency
+
+- INR
+- AED
+- SAR
+- USD
+- EUR
+
+## Payment Method
+
+- CARD
+- UPI
+- WALLET
+- BANK_TRANSFER
+
+## Transaction Status
+
+- SUCCESS
+- FAILED
+- PENDING
+
+## Device Type
+
+- MOBILE
+- DESKTOP
+- TABLET
+
+## Gateway
+
+- GATEWAY_A
+- GATEWAY_B
+- GATEWAY_C
+
+---
+
+# 5. Validation Outcome
+
+Each transaction should receive a validation outcome.
+
+Possible outcomes:
+
+- VALID
+- REJECTED
+
+Rejected records must also contain a reason describing the validation failure.
+
+Example:
+
+```text
+transaction_id: TXN00012345
+validation_status: REJECTED
+validation_reason: INVALID_AMOUNT
+
+---
+
+# 6. Validation Output Model
+
+The validation process produces two logical outputs.
+
+## 6.1 Validation Result
+
+The validation result contains one record for each processed source record.
+
+| Column | Description |
+|---|---|
+| record_key | Identifier of the source record |
+| validation_status | VALID or REJECTED |
+
+Example:
+
+```text
+record_key     validation_status
+TXN000001      VALID
+TXN000002      REJECTED
+TXN000003      VALID
+
+## Response Codes
+
+Supported response codes:
+
+- 00 - Successful transaction
+- 05 - Do not honor / general decline
+- 09 - Transaction pending
+- 14 - Invalid transaction
+- 51 - Insufficient funds
+- 91 - Issuer or gateway unavailable

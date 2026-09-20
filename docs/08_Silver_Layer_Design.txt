@@ -1,0 +1,178 @@
+# Silver / Trusted Layer Design
+
+## 1. Purpose
+
+The Silver layer contains validated and standardized records that are suitable for downstream data warehouse processing.
+
+The Silver layer is created from the raw source data and validation outputs.
+
+Raw source data is never modified.
+
+---
+
+## 2. Responsibilities
+
+The Silver layer performs the following activities:
+
+1. Select records that passed validation.
+2. Standardize data types.
+3. Standardize controlled values where required.
+4. Preserve the source business keys.
+5. Produce consistent datasets for downstream warehouse loading.
+
+---
+
+## 3. Input Sources
+
+### Customers
+
+Source:
+
+`data/raw/customers.csv`
+
+Validation result:
+
+`data/processed/validation/customer_validation_results.csv`
+
+### Merchants
+
+Source:
+
+`data/raw/merchants.csv`
+
+Validation result:
+
+`data/processed/validation/merchant_validation_results.csv`
+
+### Transactions
+
+Source:
+
+`data/raw/transactions.csv`
+
+Validation result:
+
+`data/processed/validation/transaction_validation_results.csv`
+
+---
+
+## 4. Record Selection
+
+Only records with:
+
+`validation_status = VALID`
+
+are included in the Silver layer.
+
+Rejected records remain available through the raw and validation/error datasets.
+
+---
+
+## 5. Standardization
+
+### Customers
+
+The Silver customer dataset will contain:
+
+- customer_id
+- customer_name
+- customer_email
+- country
+- registration_date
+- customer_status
+
+Dates will be standardized to a consistent date representation.
+
+---
+
+### Merchants
+
+The Silver merchant dataset will contain:
+
+- merchant_id
+- merchant_name
+- merchant_category
+- country
+- onboarding_date
+- merchant_status
+
+Dates will be standardized to a consistent date representation.
+
+---
+
+### Transactions
+
+The Silver transaction dataset will contain:
+
+- transaction_id
+- customer_id
+- merchant_id
+- transaction_timestamp
+- amount
+- currency
+- payment_method
+- transaction_status
+- country
+- gateway
+- response_code
+- device_type
+
+The transaction timestamp will be converted to a consistent datetime representation.
+
+The transaction amount will be stored as a numeric value.
+
+Response codes will be standardized to two-character strings.
+
+Examples:
+
+- 0 → `00`
+- 5 → `05`
+- 9 → `09`
+- 14 → `14`
+- 51 → `51`
+- 91 → `91`
+
+---
+
+## 6. Raw Data Preservation
+
+The Silver transformation does not modify or overwrite raw source data.
+
+The raw layer remains immutable so that:
+
+- rejected records can be investigated
+- source data can be reprocessed
+- transformations can be reproduced
+- data-quality issues can be audited
+
+---
+
+## 7. Silver Layer Outputs
+
+The following files will be generated:
+
+`data/processed/silver/customers.csv`
+
+`data/processed/silver/merchants.csv`
+
+`data/processed/silver/transactions.csv`
+
+---
+
+## 8. Processing Flow
+
+```text
+Raw Data
+   |
+   v
+Validation Results
+   |
+   +---- Rejected records ----> Error Layer
+   |
+   +---- Valid records -------> Silver Layer
+                                  |
+                                  v
+                           Standardization
+                                  |
+                                  v
+                           Trusted Dataset

@@ -1,0 +1,71 @@
+# Silver Layer Quality Checks
+
+## 1. Purpose
+
+The Silver quality-check stage verifies that the transformed datasets meet the expected structural and business-quality requirements before they are loaded into the SQL Server data warehouse.
+
+Successful execution of a transformation script alone does not guarantee that the resulting dataset is correct.
+
+---
+
+## 2. Quality Checks
+
+### Customers
+
+- Record count
+- Customer ID uniqueness
+- Customer ID completeness
+- Customer email completeness
+- Registration date validity
+- Customer status validity
+
+### Merchants
+
+- Record count
+- Merchant ID uniqueness
+- Merchant ID completeness
+- Merchant category completeness
+- Onboarding date validity
+- Merchant status validity
+
+### Transactions
+
+- Record count
+- Transaction ID uniqueness
+- Transaction ID completeness
+- Customer ID completeness
+- Merchant ID completeness
+- Customer referential integrity
+- Merchant referential integrity
+- Transaction timestamp validity
+- Positive transaction amounts
+- Currency validity
+- Payment method validity
+- Transaction status validity
+- Gateway validity
+- Response code validity
+- Device type validity
+- Duplicate complete records
+
+---
+
+## 3. Expected Silver Counts
+
+| Dataset | Expected Records |
+|---|---:|
+| Customers | 9,920 |
+| Merchants | 970 |
+| Transactions | 95,188 |
+
+---
+
+## 4. Expected Relationships
+
+Every transaction in the Silver layer must reference an existing Silver customer and merchant.
+
+```text
+Silver Transaction
+       │
+       ├── customer_id ──► Silver Customer
+       │
+       └── merchant_id ──► Silver Merchant

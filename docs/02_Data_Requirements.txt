@@ -1,0 +1,100 @@
+# Data Requirements
+
+## 1. Transaction Entity
+
+The core entity of the project is the payment transaction.
+
+Each transaction represents an attempt to process a payment between a customer and a merchant.
+
+## 2. Transaction Attributes
+
+| Attribute | Description |
+|---|---|
+| transaction_id | Unique identifier for the transaction |
+| customer_id | Identifier of the customer |
+| merchant_id | Identifier of the merchant |
+| transaction_timestamp | Date and time when the transaction occurred |
+| amount | Monetary value of the transaction |
+| currency | Currency used for the transaction |
+| payment_method | Method used to make the payment |
+| transaction_status | Result of the transaction |
+| country | Country associated with the transaction |
+| gateway | Payment gateway that processed the transaction |
+| response_code | Code returned by the payment system |
+| device_type | Device/channel used for the transaction |
+
+## 3. Expected Transaction Statuses
+
+The initial supported statuses are:
+
+- SUCCESS
+- FAILED
+- PENDING
+
+## 4. Expected Payment Methods
+
+The initial supported payment methods are:
+
+- CARD
+- UPI
+- WALLET
+- BANK_TRANSFER
+
+## 5. Data Quality Rules
+
+The pipeline should validate at least:
+
+### Mandatory Fields
+
+The following fields cannot be NULL:
+
+- transaction_id
+- customer_id
+- merchant_id
+- transaction_timestamp
+- amount
+- currency
+
+### Amount Validation
+
+Transaction amount must be greater than zero.
+
+### Transaction ID
+
+transaction_id must be unique within the processed transaction dataset.
+
+### Currency
+
+Currency must belong to the supported currency list.
+
+### Transaction Status
+
+transaction_status must belong to:
+
+- SUCCESS
+- FAILED
+- PENDING
+
+### Payment Method
+
+payment_method must belong to the supported payment methods.
+
+### Timestamp
+
+transaction_timestamp must be a valid date/time value.
+
+### Referential Integrity
+
+Customer and merchant identifiers should correspond to known entities where reference data is available.
+
+## 6. Invalid Data Handling
+
+Invalid records should not silently disappear.
+
+The pipeline should:
+
+1. Identify the validation failure.
+2. Record the rejected record.
+3. Record the reason for rejection.
+4. Preserve sufficient information for investigation.
+5. Prevent invalid records from entering the trusted analytical layer.

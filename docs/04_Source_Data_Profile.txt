@@ -1,0 +1,78 @@
+# Source Data Profile
+
+## 1. Purpose
+
+This document records the observed characteristics of the synthetic source datasets before any transformation or cleansing is performed.
+
+The profiling stage is intentionally performed before the ETL validation layer so that source characteristics can be understood independently of downstream transformations.
+
+---
+
+## 2. Source Datasets
+
+| Dataset | Expected Records | Purpose |
+|---|---:|---|
+| customers.csv | 10,000 | Customer master data |
+| merchants.csv | 1,000 | Merchant master data |
+| transactions.csv | 100,000 | Payment transaction data |
+
+---
+
+## 3. Profiling Dimensions
+
+The source data is profiled across:
+
+- Row count
+- Column count
+- Data types
+- Missing values
+- Empty strings
+- Duplicate records
+- Column cardinality
+- Numeric distributions
+- Categorical distributions
+- Sample records
+
+---
+
+## 4. Expected Data Quality Issues
+
+The synthetic source generator deliberately introduces data-quality issues.
+
+### Customer
+
+- Missing email addresses
+- Invalid email addresses
+
+### Merchant
+
+- Missing merchant categories
+
+### Transaction
+
+- Duplicate transaction identifiers
+- Negative transaction amounts
+- Zero transaction amounts
+- Missing customer identifiers
+- Missing merchant identifiers
+- Unsupported currencies
+- Invalid transaction statuses
+- Invalid payment methods
+- Unknown customer identifiers
+- Unknown merchant identifiers
+
+---
+
+## 5. Profiling Principle
+
+The raw source data is treated as immutable.
+
+Profiling does not modify the source datasets.
+
+Any cleansing, standardization, validation, or rejection of records will occur in downstream pipeline stages.
+
+---
+
+## 6. Next Step
+
+The profiling results will be used to define the validation rules implemented in the ETL pipeline.

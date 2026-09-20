@@ -1,0 +1,96 @@
+# Data Quality Error Catalog
+
+## 1. Purpose
+
+This document defines the standardized error codes produced by the validation layer.
+
+Error codes provide a consistent machine-readable representation of data-quality failures.
+
+---
+
+## 2. Customer Errors
+
+| Error Code | Description |
+|---|---|
+| CUST_MISSING_ID | Customer ID is missing |
+| CUST_DUPLICATE_ID | Customer ID is not unique |
+| CUST_MISSING_NAME | Customer name is missing |
+| CUST_MISSING_EMAIL | Customer email is missing |
+| CUST_INVALID_EMAIL | Customer email format is invalid |
+| CUST_INVALID_COUNTRY | Customer country is unsupported |
+| CUST_INVALID_STATUS | Customer status is unsupported |
+| CUST_INVALID_DATE | Registration date is invalid |
+
+---
+
+## 3. Merchant Errors
+
+| Error Code | Description |
+|---|---|
+| MER_MISSING_ID | Merchant ID is missing |
+| MER_DUPLICATE_ID | Merchant ID is not unique |
+| MER_MISSING_NAME | Merchant name is missing |
+| MER_MISSING_CATEGORY | Merchant category is missing |
+| MER_INVALID_CATEGORY | Merchant category is unsupported |
+| MER_INVALID_COUNTRY | Merchant country is unsupported |
+| MER_INVALID_STATUS | Merchant status is unsupported |
+| MER_INVALID_DATE | Onboarding date is invalid |
+
+---
+
+## 4. Transaction Errors
+
+| Error Code | Description |
+|---|---|
+| TXN_MISSING_ID | Transaction ID is missing |
+| TXN_DUPLICATE_ID | Transaction ID is not unique |
+| TXN_MISSING_CUSTOMER | Customer ID is missing |
+| TXN_MISSING_MERCHANT | Merchant ID is missing |
+| TXN_INVALID_TIMESTAMP | Transaction timestamp is invalid |
+| TXN_INVALID_AMOUNT | Transaction amount is zero or negative |
+| TXN_INVALID_CURRENCY | Currency is unsupported |
+| TXN_INVALID_PAYMENT_METHOD | Payment method is unsupported |
+| TXN_INVALID_STATUS | Transaction status is unsupported |
+| TXN_INVALID_COUNTRY | Country is unsupported |
+| TXN_INVALID_GATEWAY | Gateway is unsupported |
+| TXN_INVALID_RESPONSE_CODE | Response code is unsupported |
+| TXN_INVALID_DEVICE | Device type is unsupported |
+| TXN_UNKNOWN_CUSTOMER | Customer ID does not exist in customer source |
+| TXN_UNKNOWN_MERCHANT | Merchant ID does not exist in merchant source |
+
+---
+
+## 5. Severity
+
+### Critical
+
+The record cannot safely enter the trusted data layer.
+
+Examples:
+
+- Missing transaction ID
+- Duplicate transaction ID
+- Invalid amount
+- Missing customer ID
+- Missing merchant ID
+- Unknown customer
+- Unknown merchant
+
+### High
+
+The record violates an important business or domain constraint.
+
+Examples:
+
+- Invalid currency
+- Invalid payment method
+- Invalid transaction status
+- Invalid gateway
+
+### Medium
+
+The record contains a quality issue that is less critical to the transaction processing logic.
+
+Examples:
+
+- Invalid customer email

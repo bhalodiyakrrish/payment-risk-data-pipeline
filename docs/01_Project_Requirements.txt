@@ -1,0 +1,119 @@
+# Payment Transaction Risk & Data Quality Pipeline
+
+## 1. Project Overview
+
+This project simulates a data engineering pipeline for a digital payments company.
+
+The pipeline processes payment transaction data received from source systems, validates and cleans the data, identifies data quality issues, and loads trusted transaction data into a SQL Server data warehouse.
+
+The resulting data will support operational reporting, transaction analysis, merchant performance analysis, and data quality monitoring.
+
+---
+
+## 2. Business Problem
+
+Payment companies process large volumes of transactions across merchants, customers, payment methods, countries, and transaction channels.
+
+Raw transaction data may contain:
+
+- Duplicate transactions
+- Missing mandatory fields
+- Invalid transaction amounts
+- Invalid currencies
+- Invalid transaction statuses
+- Incorrect or malformed timestamps
+- Inconsistent categorical values
+
+If these issues are not detected before the data reaches analytical systems, business reports and downstream analysis may produce inaccurate results.
+
+The objective of this project is to build a reliable data pipeline that converts raw payment transaction data into validated, standardized, and business-ready data.
+
+---
+
+## 3. Project Objectives
+
+The pipeline should:
+
+1. Ingest raw payment transaction data.
+2. Store the raw data without modifying the original source.
+3. Validate incoming records.
+4. Identify and isolate invalid records.
+5. Clean and standardize valid records.
+6. Remove duplicate transactions.
+7. Load trusted transaction data into SQL Server.
+8. Model the data using a dimensional/star schema.
+9. Maintain data quality and pipeline execution logs.
+10. Support incremental processing of new transaction data.
+11. Provide business-ready datasets for transaction and risk analysis.
+
+---
+
+## 4. Expected Business Questions
+
+The final data model should allow analysts to answer questions such as:
+
+- What is the transaction success rate?
+- What is the total transaction value?
+- What is the average transaction value?
+- Which payment methods have the highest failure rates?
+- Which merchants have unusually high transaction failure rates?
+- Which countries generate the highest transaction volume?
+- Which response codes contribute most to transaction failures?
+- How many records were rejected by the pipeline?
+- What are the most common data quality issues?
+
+---
+
+## 5. Expected Pipeline
+
+The high-level pipeline will follow:
+
+Source Data
+    ↓
+Raw / Bronze Layer
+    ↓
+Validation
+    ↓
+Transformation
+    ↓
+Silver / Clean Layer
+    ↓
+Data Warehouse
+    ↓
+Gold / Business Layer
+    ↓
+Analytics
+
+Invalid records will be routed to a separate error/rejection area for investigation.
+
+---
+
+## 6. Technology Stack
+
+Initial technology stack:
+
+- Python
+- Pandas
+- SQL Server
+- T-SQL
+- Git / GitHub
+
+Additional technologies will only be introduced if they provide meaningful value to the project.
+
+---
+
+## 7. Success Criteria
+
+The project will be considered complete when:
+
+- Raw transaction data can be ingested automatically.
+- Data quality rules are executed automatically.
+- Invalid records are identified and logged.
+- Valid records are transformed consistently.
+- Data is loaded into SQL Server.
+- A dimensional data model is implemented.
+- Incremental processing is supported.
+- Pipeline execution is logged.
+- Business queries can be executed against curated data.
+- The entire project can be reproduced from the GitHub repository.
+- The architecture and implementation can be explained clearly in a technical interview.

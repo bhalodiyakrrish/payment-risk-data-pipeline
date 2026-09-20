@@ -1,0 +1,127 @@
+# SQL Server Data Warehouse Design
+
+## 1. Purpose
+
+The SQL Server data warehouse provides a structured analytical layer on top of the trusted Silver datasets.
+
+The warehouse uses a dimensional star-schema design to support transaction analytics, reporting, and business intelligence workloads.
+
+---
+
+## 2. Grain
+
+### FactTransaction
+
+The grain of the fact table is:
+
+> One row represents one payment transaction.
+
+The source `transaction_id` is treated as the business key for the transaction.
+
+---
+
+## 3. Dimensions
+
+The initial warehouse contains the following dimensions:
+
+- DimCustomer
+- DimMerchant
+- DimDate
+
+---
+
+## 4. Fact Table
+
+### FactTransaction
+
+The fact table contains transaction-level events and measures.
+
+Key fields:
+
+- TransactionKey
+- TransactionID
+- CustomerKey
+- MerchantKey
+- DateKey
+- TransactionTimestamp
+- Amount
+- Currency
+- PaymentMethod
+- TransactionStatus
+- Country
+- Gateway
+- ResponseCode
+- DeviceType
+
+---
+
+## 5. DimCustomer
+
+Stores descriptive customer attributes.
+
+Fields:
+
+- CustomerKey
+- CustomerID
+- CustomerName
+- CustomerEmail
+- Country
+- RegistrationDate
+- CustomerStatus
+
+`CustomerKey` is the warehouse surrogate key.
+
+`CustomerID` is the source business key.
+
+---
+
+## 6. DimMerchant
+
+Stores descriptive merchant attributes.
+
+Fields:
+
+- MerchantKey
+- MerchantID
+- MerchantName
+- MerchantCategory
+- Country
+- OnboardingDate
+- MerchantStatus
+
+`MerchantKey` is the warehouse surrogate key.
+
+`MerchantID` is the source business key.
+
+---
+
+## 7. DimDate
+
+Provides reusable calendar attributes for analytical queries.
+
+Fields:
+
+- DateKey
+- FullDate
+- Year
+- Quarter
+- Month
+- MonthName
+- Day
+- DayOfWeek
+- DayName
+
+---
+
+## 8. Fact-to-Dimension Relationships
+
+The fact table references dimensions using surrogate keys.
+
+```text
+FactTransaction
+      |
+      ├── CustomerKey → DimCustomer
+      |
+      ├── MerchantKey → DimMerchant
+      |
+      └── DateKey → DimDate

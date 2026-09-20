@@ -1,0 +1,223 @@
+# Source Data Model
+
+## 1. Source System Overview
+
+The simulated payment platform receives data from three logical source entities:
+
+1. Customers
+2. Merchants
+3. Transactions
+
+Transactions reference customers and merchants through their respective identifiers.
+
+---
+
+## 2. Customer Source
+
+### Entity
+
+Customer
+
+### Purpose
+
+Stores customer information required to associate payment transactions with customers.
+
+### Attributes
+
+| Column | Data Type | Description | Required |
+|---|---|---|---|
+| customer_id | VARCHAR | Unique customer identifier | Yes |
+| customer_name | VARCHAR | Customer name | Yes |
+| customer_email | VARCHAR | Customer email address | Yes |
+| country | VARCHAR | Customer country | Yes |
+| registration_date | DATE | Date customer registered | Yes |
+| customer_status | VARCHAR | Current customer status | Yes |
+
+### Expected Customer Statuses
+
+- ACTIVE
+- INACTIVE
+- SUSPENDED
+
+---
+
+## 3. Merchant Source
+
+### Entity
+
+Merchant
+
+### Purpose
+
+Stores businesses that use the payment platform to process customer transactions.
+
+### Attributes
+
+| Column | Data Type | Description | Required |
+|---|---|---|---|
+| merchant_id | VARCHAR | Unique merchant identifier | Yes |
+| merchant_name | VARCHAR | Merchant/business name | Yes |
+| merchant_category | VARCHAR | Business category | Yes |
+| country | VARCHAR | Merchant country | Yes |
+| onboarding_date | DATE | Date merchant joined the platform | Yes |
+| merchant_status | VARCHAR | Current merchant status | Yes |
+
+### Expected Merchant Statuses
+
+- ACTIVE
+- INACTIVE
+- SUSPENDED
+
+---
+
+## 4. Transaction Source
+
+### Entity
+
+Transaction
+
+### Purpose
+
+Stores individual payment attempts processed through the payment platform.
+
+### Attributes
+
+| Column | Data Type | Description | Required |
+|---|---|---|---|
+| transaction_id | VARCHAR | Unique transaction identifier | Yes |
+| customer_id | VARCHAR | Customer associated with transaction | Yes |
+| merchant_id | VARCHAR | Merchant associated with transaction | Yes |
+| transaction_timestamp | DATETIME | Date/time transaction occurred | Yes |
+| amount | DECIMAL | Transaction amount | Yes |
+| currency | VARCHAR | Transaction currency | Yes |
+| payment_method | VARCHAR | Payment method used | Yes |
+| transaction_status | VARCHAR | Transaction outcome | Yes |
+| country | VARCHAR | Country where transaction originated | Yes |
+| gateway | VARCHAR | Payment gateway processing transaction | Yes |
+| response_code | VARCHAR | Payment processing response code | Yes |
+| device_type | VARCHAR | Device used for transaction | Yes |
+
+---
+
+## 5. Controlled Values
+
+### Currency
+
+Initial supported currencies:
+
+- INR
+- AED
+- SAR
+- USD
+- EUR
+
+### Payment Method
+
+- CARD
+- UPI
+- WALLET
+- BANK_TRANSFER
+
+### Transaction Status
+
+- SUCCESS
+- FAILED
+- PENDING
+
+### Device Type
+
+- MOBILE
+- DESKTOP
+- TABLET
+
+### Gateway
+
+- GATEWAY_A
+- GATEWAY_B
+- GATEWAY_C
+
+---
+
+## 6. Source Relationships
+
+A customer can make multiple transactions.
+
+A merchant can receive multiple transactions.
+
+Therefore:
+
+Customer 1 ────────< Transaction >──────── 1 Merchant
+
+Relationships:
+
+- customer.customer_id → transaction.customer_id
+- merchant.merchant_id → transaction.merchant_id
+
+The transaction source is therefore the central transactional entity.
+
+---
+
+## 7. Expected Source Data Quality Issues
+
+The source data will intentionally contain a controlled number of quality issues to simulate real-world source-system problems.
+
+### Transaction-level issues
+
+Examples include:
+
+- Duplicate transaction IDs
+- Missing customer IDs
+- Missing merchant IDs
+- Missing transaction timestamps
+- Negative transaction amounts
+- Zero transaction amounts
+- Unsupported currencies
+- Invalid transaction statuses
+- Invalid payment methods
+- Malformed timestamps
+- Unknown customer IDs
+- Unknown merchant IDs
+
+### Customer-level issues
+
+Examples include:
+
+- Missing email addresses
+- Invalid email formats
+- Duplicate customer records
+- Invalid customer statuses
+
+### Merchant-level issues
+
+Examples include:
+
+- Missing merchant categories
+- Invalid merchant statuses
+- Duplicate merchant records
+
+The pipeline must detect these issues rather than silently accepting them.
+
+---
+
+## 8. Synthetic Data Generation
+
+The source datasets are synthetically generated using Python.
+
+The generator produces:
+
+- 10,000 customers
+- 1,000 merchants
+- 100,000 transactions
+
+The generated data contains both valid records and intentionally introduced data-quality issues.
+
+The purpose of the synthetic data is to simulate realistic source-system conditions while avoiding the use of real customer or payment information.
+
+A fixed random seed is used to make the dataset generation reproducible.
+
+### Generated Files
+
+```text
+data/raw/customers.csv
+data/raw/merchants.csv
+data/raw/transactions.csv

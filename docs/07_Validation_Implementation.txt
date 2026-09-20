@@ -1,0 +1,54 @@
+# Validation Implementation
+
+## 1. Customer Validation
+
+The customer validation component reads the raw customer source file and evaluates each customer record against the documented data-quality rules.
+
+### Input
+
+```text
+data/raw/customers.csv
+
+---
+
+## 7. Merchant Validation
+
+The merchant validation component reads the raw merchant source file and evaluates each merchant against the documented data-quality rules.
+
+### Input
+
+```text
+data/raw/merchants.csv
+
+## 5. Transaction Validation
+
+Transaction validation is performed against the raw transaction dataset before trusted data is introduced into the Silver layer.
+
+The transaction validation process checks:
+
+- Transaction ID completeness
+- Transaction ID uniqueness
+- Customer ID completeness
+- Merchant ID completeness
+- Customer referential integrity
+- Merchant referential integrity
+- Transaction timestamp validity
+- Transaction amount validity
+- Currency validity
+- Payment method validity
+- Transaction status validity
+- Country validity
+- Gateway validity
+- Response code validity
+- Device type validity
+
+### Reference Data
+
+Customer and merchant IDs are loaded from their respective source master datasets.
+
+A transaction is considered to have valid referential integrity only when:
+
+```text
+transaction.customer_id exists in customer master
+transaction.merchant_id exists in merchant master
+
